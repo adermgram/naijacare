@@ -7,13 +7,24 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", { phone, password });
-      localStorage.setItem("token", res.data.token);
-      navigate("/welcome");
+      const token = res.data.token;
+      localStorage.setItem("token", token);      navigate("/welcome");
+
+      // ⬇️ Decode and redirect based on role
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      if (payload.role === "doctor") {
+        navigate("/doctor/dashboard");
+      } else {
+        navigate("/patient/doctors");
+      }
+      
+
     } catch (err) {
       setMessage(err.response?.data?.error || "Login failed");
     }

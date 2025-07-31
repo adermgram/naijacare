@@ -6,19 +6,16 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 // Add other route imports as you create them
 
+const doctorRoutes = require('./routes/doctor');
+
 app.use(cors());
 app.use(express.json());
 
 
-app.get("/", (req, res)=>{
-    res.send("game is game");
-})
-
-app.get("/me", (req, res)=>{
-    res.send("wassup nigga");
-})
 
 app.use('/api/auth', authRoutes);
-// app.use('/api/consultation', consultationRoutes);
+// app.use('/api/consultation', consultationroutes);
+app.use('/api/doctors', doctorRoutes);
+app.use('/api/doctor', doctorRoutes);
 
 module.exports = app;

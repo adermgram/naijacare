@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Login from './Login.jsx';
 import Register from './Register.jsx';
 import Welcome from './Welcome.jsx';
+import DoctorDashboard from './DoctorDashboard.jsx';
+import AvailableDoctors from './AvailableDoctors.jsx';
 
 export default function App() {
   return (
@@ -15,6 +17,9 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/welcome" element={<Welcome />} />
+
+          <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+          <Route path="/patient/doctors" element={<AvailableDoctors />} />
         </Routes>
       </div>
     </Router>
