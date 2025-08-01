@@ -1,15 +1,28 @@
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { SocketContext } from "../contexts/SocketContext";
 
 export default function AvailableDoctors() {
   const [doctors, setDoctors] = useState([]);
+  const socket = useContext(SocketContext);
+
+  const fetchDoctors = async () => {
+    const res = await axios.get("http://localhost:5000/api/doctors/available");
+    setDoctors(res.data);
+  };
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      const res = await axios.get("http://localhost:5000/api/doctors/available");
-      setDoctors(res.data);
-    };
     fetchDoctors();
+
+    // Listen for updates
+    socket.on("doctorAvailabilityChanged", () => {
+      fetchDoctors(); // re-fetch on any change
+    });
+
+    return () => {
+      socket.off("doctorAvailabilityChanged");
+    };
   }, []);
 
   return (

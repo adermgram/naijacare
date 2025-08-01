@@ -1,22 +1,12 @@
 const express = require('express');
-const User = require('../models/User'); 
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware.js");
+const { toggleAvailability, getAvailableDoctors } = require('../controllers/authController');
 
-router.put('/availability', authMiddleware, async (req, res) => {
-  try {
-    if (req.user.role !== 'doctor') return res.status(403).json({ error: 'Forbidden' });
-    const user = await User.findByIdAndUpdate(req.user.userId, { available: req.body.available }, { new: true });
-    res.json({ available: user.available });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Toggle doctor availability
+router.put('/availability', authMiddleware, toggleAvailability);
 
 // Get available doctors
-router.get('/available', async (req, res) => {
-  const doctors = await User.find({ role: 'doctor', available: true }, { name: 1, phone: 1, language: 1 });
-  res.json(doctors);
-});
+router.get('/available', getAvailableDoctors);
 
 module.exports = router;
